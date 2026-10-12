@@ -1,10 +1,9 @@
-# IFT3913 — Tâche 2 : ChatUniTest et analyse de mutation d’Apache Tika
+# IFT3913 — Tâche 2 : ChatUniTest et analyse de mutation d’Apache Tika pdf-parser
 
 ## Présentation du travail
 
-Pour cette tâche, j’ai choisi la classe `org.apache.tika.parser.pdf.PDFParser` du module `tika-parser-pdf-module` d’Apache Tika 4.0.0-SNAPSHOT. Cette classe avait déjà une suite de tests assez importante, mais elle contenait encore plusieurs branches peu ou pas testées. Elle était aussi intéressante parce que sa méthode principale, `parse()`, regroupe plusieurs comportements importants : la gestion de la mémoire, l’OCR, le rendu des pages, les métadonnées, la restauration du `ParseContext` et la fermeture des ressources.
+Pour cette tâche, j’ai choisi la classe `org.apache.tika.parser.pdf.PDFParser` du module `tika-parser-pdf-module` d’Apache. Cette classe avait déjà une suite de tests assez importante, mais elle contenait encore plusieurs branches peu ou pas testées. Elle était aussi intéressante parce que sa méthode principale, `parse()`, regroupe plusieurs comportements importants : la gestion de la mémoire, l’OCR, le rendu des pages, les métadonnées, la restauration du `ParseContext` et la fermeture des ressources.
 
-Je n’ai pas modifié le code de production de `PDFParser` pour faciliter les résultats. Tout le travail a été fait dans les tests et dans la configuration Maven nécessaire à ChatUniTest, JUnit 5, Mockito et PITEST.
 
 Le premier rapport PITEST conservé dans `IFT3913-Tache2/pit-reports-avant/` contenait 201 mutants :
 
@@ -15,11 +14,11 @@ Le premier rapport PITEST conservé dans `IFT3913-Tache2/pit-reports-avant/` con
 - une couverture des lignes de 78 %;
 - une force des tests de 62 %.
 
-J’ai donc choisi `PDFParser` parce qu’il y avait beaucoup de place pour améliorer les tests, en particulier autour de `parse()`, tout en gardant une seule classe cible pendant toute l’expérience.
+J’ai donc choisi `PDFParser` parce qu’il y avait beaucoup de place pour améliorer les tests, en particulier autour de `parse()`.
 
 ## Environnement et configuration
 
-Le travail a été réalisé sous Windows avec PowerShell, IntelliJ IDEA, Maven, JUnit 5, Mockito et Ollama. ChatUniTest a été ajouté au POM avec la configuration suivante :
+Le travail a été réalisé sous Windows avec PowerShell, IntelliJ IDEA, Maven, JUnit 5, Mockito et Ollama, Codex. ChatUniTest a été ajouté au POM avec la configuration suivante :
 
 ```xml
 <configuration>
@@ -182,19 +181,12 @@ Résultats locaux finaux :
 
 Le premier commit de la tâche est `78539c02d` (`test: l'ajout de ChatUniTest tests, mutation et README`). Il a ajouté la configuration Maven, les trois fichiers issus des essais ChatUniTest, les deux premières classes de tests manuels, le README et le rapport PITEST initial. Les modifications actuelles complètent ce travail sans supprimer le rapport historique.
 
-Certaines limites doivent être gardées en tête :
-
+précision:
 - toutes les réponses brutes de ChatUniTest n’ont pas été ajoutées au dépôt;
 - les étapes intermédiaires à 52 % et 55 % n’ont pas chacune un rapport XML conservé;
 - l’alias Ollama `code-llama` a changé de modèle pendant l’expérience;
-- les tests Poppler ignorés nécessitent un programme externe et ne font pas partie de la cible PITEST;
-- la réussite locale ne doit pas être confondue avec une réussite de GitHub Actions tant que le workflow distant n’a pas terminé.
+Utilisation de l'ai:
+Utilisation de codex après plusieurs tentatives (beaucoup) de génération de test avec ChatUniTest qui a réussi pour une seul méthode, pour la majorité il fournissait du code pas en java ou il compilait pas, aussi pour les test manuelles certaines méthodes sont plus complexe que d'autre d'où l'utilisation d'autre ai pour comprendre ce que fait la fonction et générer des test adéquat, ils s'agit de la 4 éme version du readme pour pdfparser reformater à l'aide de chatgpt pour une meilleure lisibilité et ne pas ometre de detail important.
 
-## Liens
 
-- Fork du projet : <https://github.com/AymenCHINIG1/tika>
-- Branche de travail : <https://github.com/AymenCHINIG1/tika/tree/anas/tache2>
-- README de la tâche : <https://github.com/AymenCHINIG1/tika/blob/anas/tache2/IFT3913-Tache2/README.MD>
-- Consignes officielles : <https://github.com/umontreal-diro/IFT3913/tree/2026/tache2>
 
-La pull request finale vers le dépôt du cours sera ajoutée ici après sa création. Les tests et le rapport sont prêts localement; le statut GitHub Actions devra être confirmé sur la branche publiée.
