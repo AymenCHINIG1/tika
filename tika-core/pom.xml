@@ -119,6 +119,22 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>${mockito-junit-jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -289,6 +305,53 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.30.0</version>
+        <configuration>
+          <targetClasses>
+            <param>org.apache.tika.parser.RegexCaptureParser</param>
+          </targetClasses>
+          <targetTests>
+            <param>org.apache.tika.parser.RegexCaptureParser*Test*</param>
+          </targetTests>
+          <outputFormats>
+            <param>HTML</param>
+            <param>XML</param>
+          </outputFormats>
+          <threads>4</threads>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.3</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>io.github.zju-aces-ise</groupId>
+        <artifactId>chatunitest-maven-plugin</artifactId>
+        <version>2.1.1</version>
+        <configuration>
+          <!-- ChatUniTest requires a non-empty key even for a local OpenAI-compatible API. -->
+          <apiKeys>local-ollama</apiKeys>
+          <!-- Name expected by ChatUniTest; Ollama maps it to codellama:7b. -->
+          <model>code-llama</model>
+          <url>http://127.0.0.1:11434/v1/chat/completions</url>
+          <testNumber>1</testNumber>
+          <maxRounds>3</maxRounds>
+          <maxResponseTokens>4096</maxResponseTokens>
+          <temperature>0.2</temperature>
+          <thread>false</thread>
+          <stopWhenSuccess>true</stopWhenSuccess>
+          <noExecution>false</noExecution>
+          <merge>true</merge>
+          <tmpOutput>${project.build.directory}/chatunitest-info-codellama</tmpOutput>
+          <testOutput>${project.build.directory}/chatunitest-generated-tests-codellama</testOutput>
+        </configuration>
       </plugin>
     </plugins>
   </build>
