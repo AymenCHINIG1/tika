@@ -66,9 +66,9 @@ Les problèmes les plus fréquents étaient les suivants :
 - tests sans véritable oracle, dont un corps de test vide;
 - difficulté à appeler correctement les méthodes privées.
 
-### Méthodes pour lesquelles nous avons obtenu un résultat utile
+### Méthodes pour lesquelles j’ai obtenu un résultat utile
 
-Nous avons retenu trois méthodes avant l’ajout des tests manuels plus avancés :
+J’ai retenu trois méthodes avant l’ajout des tests manuels plus avancés :
 
 | Méthode | Pourquoi elle a été choisie | Résultat de ChatUniTest | Catégorie finale |
 |---|---|---|---|
@@ -95,7 +95,7 @@ Cette comparaison montre que ChatUniTest a surtout été utile comme point de d�
 
 ## Tests écrits manuellement avant l’utilisation de Codex
 
-Comme ChatUniTest ne réussissait pas à produire un test exploitable pour `parse()`, nous avons ajouté manuellement deux classes guidées par les premiers rapports PITEST.
+Comme ChatUniTest ne réussissait pas à produire un test exploitable pour `parse()`, j’ai ajouté manuellement deux classes guidées par les premiers rapports PITEST.
 
 `PDFParser_parse_ContextRestorationTest.java` contient trois tests. Ils vérifient que les objets présents dans le `ParseContext` sont restaurés après une analyse réussie ou après une exception, y compris lorsque les valeurs initiales sont nulles. Les oracles utilisent `assertSame`, `assertNull` et `assertThrows`, car il fallait vérifier l’identité exacte des objets restaurés et pas seulement l’absence d’exception.
 
