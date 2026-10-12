@@ -16,28 +16,23 @@
  */
 package org.apache.tika.parser.pdf;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class PDFParser_shouldSpool_8_0_Test {
 
-    @InjectMocks
-    private PDFParser pdfParser = new PDFParser();
+    private final PDFParser pdfParser = new PDFParser();
 
     @Mock
     private PDFParserConfig config;
-
-    @Mock
-    private OcrConfig ocrConfig;
-
 
     @Test
     public void testShouldSpool_WithRenderPagesBeforeParse() throws Exception {

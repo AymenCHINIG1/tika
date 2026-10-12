@@ -115,6 +115,8 @@
             <param>org.apache.tika.parser.pdf.PDFParser_scanXRefOffsets_4_0_Test</param>
             <param>org.apache.tika.parser.pdf.PDFParser_parse_ContextRestorationTest</param>
             <param>org.apache.tika.parser.pdf.PDFParser_parse_MutationFocusedTest</param>
+            <param>org.apache.tika.parser.pdf.PDFParser_MutationCoverageTest</param>
+            <param>org.apache.tika.parser.pdf.PDFParser_ParseResourceTest</param>
           </targetTests>
           <threads>2</threads>
           <outputFormats>
