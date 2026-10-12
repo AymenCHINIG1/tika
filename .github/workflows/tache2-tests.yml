@@ -1,0 +1,88 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: IFT3913 task 2 tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  regex-capture-parser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Build Tika prerequisites
+        run: >-
+          ./mvnw -B -pl tika-core -am install
+          -DskipTests=true -DskipITs=true
+          -Dossindex.skip=true --no-transfer-progress
+      - name: Run task 2 tests
+        run: >-
+          ./mvnw -f tika-core/pom.xml
+          -Dtest=RegexCaptureParserChatUniTestTest,RegexCaptureParserManualTest
+          test -DskipITs=true -Dossindex.skip=true --no-transfer-progress
+      - name: Run mutation analysis before ChatUniTest
+        run: >-
+          ./mvnw -f tika-core/pom.xml test-compile
+          org.pitest:pitest-maven:mutationCoverage
+          -DtargetTests=org.apache.tika.parser.RegexCaptureParserTest
+          -DreportsDirectory=${{ github.workspace }}/tika-core/target/pit-reports-before
+          -DskipITs=true -Dossindex.skip=true --no-transfer-progress
+      - name: Upload PIT report before ChatUniTest
+        uses: actions/upload-artifact@v4
+        with:
+          name: pit-report-before
+          path: tika-core/target/pit-reports-before/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Run mutation analysis after ChatUniTest
+        run: >-
+          ./mvnw -f tika-core/pom.xml test-compile
+          org.pitest:pitest-maven:mutationCoverage
+          -DtargetTests=org.apache.tika.parser.RegexCaptureParserTest,org.apache.tika.parser.RegexCaptureParserChatUniTestTest
+          -DreportsDirectory=${{ github.workspace }}/tika-core/target/pit-reports-after-chatunitest
+          -DskipITs=true -Dossindex.skip=true --no-transfer-progress
+      - name: Upload PIT report after ChatUniTest
+        uses: actions/upload-artifact@v4
+        with:
+          name: pit-report-after-chatunitest
+          path: tika-core/target/pit-reports-after-chatunitest/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Run final mutation analysis
+        run: >-
+          ./mvnw -f tika-core/pom.xml test-compile
+          org.pitest:pitest-maven:mutationCoverage
+          -DtargetTests="org.apache.tika.parser.RegexCaptureParser*Test*"
+          -DreportsDirectory=${{ github.workspace }}/tika-core/target/pit-reports-final
+          -DskipITs=true -Dossindex.skip=true --no-transfer-progress
+      - name: Upload final PIT report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pit-report-final
+          path: tika-core/target/pit-reports-final/
+          if-no-files-found: error
+          retention-days: 90
