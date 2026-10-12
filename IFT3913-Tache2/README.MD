@@ -185,6 +185,7 @@ précision:
 - toutes les réponses brutes de ChatUniTest n’ont pas été ajoutées au dépôt;
 - les étapes intermédiaires à 52 % et 55 % n’ont pas chacune un rapport XML conservé;
 - l’alias Ollama `code-llama` a changé de modèle pendant l’expérience;
+
 Utilisation de l'ai:
 Utilisation de codex après plusieurs tentatives (beaucoup) de génération de test avec ChatUniTest qui a réussi pour une seul méthode, pour la majorité il fournissait du code pas en java ou il compilait pas, aussi pour les test manuelles certaines méthodes sont plus complexe que d'autre d'où l'utilisation d'autre ai pour comprendre ce que fait la fonction et générer des test adéquat, ils s'agit de la 4 éme version du readme pour pdfparser reformater à l'aide de chatgpt pour une meilleure lisibilité et ne pas ometre de detail important.
 
