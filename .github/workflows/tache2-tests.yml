@@ -86,3 +86,30 @@ jobs:
           path: tika-core/target/pit-reports-final/
           if-no-files-found: error
           retention-days: 90
+
+  pdf-parser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Build PDF parser prerequisites
+        run: >-
+          ./mvnw -B
+          -pl tika-parsers/tika-parsers-standard/tika-parsers-standard-modules/tika-parser-pdf-module
+          -am install
+          -DskipTests=true -DskipITs=true
+          -Dossindex.skip=true --no-transfer-progress
+      - name: Run PDF parser tests
+        run: >-
+          ./mvnw -B
+          -f tika-parsers/tika-parsers-standard/tika-parsers-standard-modules/tika-parser-pdf-module/pom.xml
+          test
+          -DskipITs=true -Dossindex.skip=true
+          --no-transfer-progress

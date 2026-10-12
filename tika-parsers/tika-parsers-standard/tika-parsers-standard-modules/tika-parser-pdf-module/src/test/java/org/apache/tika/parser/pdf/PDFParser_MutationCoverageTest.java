@@ -32,6 +32,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -59,6 +61,14 @@ import org.apache.tika.renderer.pdf.pdfbox.PDFBoxRenderer;
 
 /** Manual tests whose assertions are deliberately tied to surviving PDFParser mutants. */
 class PDFParser_MutationCoverageTest {
+
+    private static Calendar utcCalendar(int year, int month, int day,
+                                        int hour, int minute, int second) {
+        Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"), Locale.ROOT);
+        calendar.clear();
+        calendar.set(year, month, day, hour, minute, second);
+        return calendar;
+    }
 
     private static Object invoke(PDFParser parser, String name, Class<?>[] types,
                                  Object... args) throws Exception {
@@ -158,8 +168,8 @@ class PDFParser_MutationCoverageTest {
         try (PDDocument document = new PDDocument()) {
             document.addPage(new PDPage());
             PDDocumentInformation info = new PDDocumentInformation();
-            Calendar created = new GregorianCalendar(2020, Calendar.JANUARY, 2, 3, 4, 5);
-            Calendar modified = new GregorianCalendar(2021, Calendar.FEBRUARY, 3, 4, 5, 6);
+            Calendar created = utcCalendar(2020, Calendar.JANUARY, 2, 3, 4, 5);
+            Calendar modified = utcCalendar(2021, Calendar.FEBRUARY, 3, 4, 5, 6);
             info.setTitle("mutation-title");
             info.setAuthor("mutation-author");
             info.setCreator("mutation-tool");
@@ -220,7 +230,7 @@ class PDFParser_MutationCoverageTest {
             signature.setFilter(PDSignature.FILTER_ADOBE_PPKLITE);
             signature.setLocation("Montreal");
             signature.setReason("Mutation testing");
-            signature.setSignDate(new GregorianCalendar(2022, Calendar.MARCH, 4));
+            signature.setSignDate(utcCalendar(2022, Calendar.MARCH, 4, 0, 0, 0));
             signed.setValue(signature);
             form.setFields(Arrays.asList(unsigned, signed));
 
