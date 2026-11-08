@@ -1,0 +1,117 @@
+
+name: IFT3913 - Tache 3 Semgrep
+
+on:
+  pull_request:
+    branches:
+      - tache3
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  semgrep:
+    name: Detection des nouvelles vulnerabilites
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # Recuperer la version de reference
+      - name: Recuperer le code de reference
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha || 'tache3' }}
+          path: reference
+
+      # Recuperer le code propose
+      - name: Recuperer le code candidat
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: candidat
+
+      # Preparer Python
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Installer une version determinee de Semgrep
+      - name: Installer Semgrep
+        run: python -m pip install semgrep==1.184.0
+
+      - name: Verifier Semgrep
+        run: semgrep --version
+
+      # Telecharger les regles une seule fois
+      - name: Recuperer les regles automatiques
+        shell: bash
+        run: |
+          mkdir -p ci-regles ci-rapports
+
+          curl --fail --show-error --silent --location \
+            -H "Accept: application/json" \
+            https://semgrep.dev/c/auto \
+            -o ci-regles/auto.yml
+
+          semgrep scan --validate \
+            --config ci-regles/auto.yml
+
+      # Scanner les deux versions avec les memes regles
+      - name: Analyser les deux versions de Tika
+        shell: bash
+        run: |
+          MODULES=(
+            tika-core
+            tika-serialization
+            tika-parsers/tika-parsers-standard/tika-parsers-standard-modules/tika-parser-pdf-module
+            tika-parsers/tika-parsers-standard/tika-parsers-standard-modules/tika-parser-ocr-module
+            tika-parsers/tika-parsers-standard/tika-parsers-standard-modules/tika-parser-microsoft-module
+          )
+
+          CONFIG="$GITHUB_WORKSPACE/ci-regles/auto.yml"
+          RAPPORTS="$GITHUB_WORKSPACE/ci-rapports"
+
+          echo "Analyse du code de reference"
+
+          (
+            cd reference
+            semgrep scan \
+              --config "$CONFIG" \
+              --json \
+              --output "$RAPPORTS/baseline.json" \
+              "${MODULES[@]}"
+          )
+
+          echo "Analyse du code candidat"
+
+          (
+            cd candidat
+            semgrep scan \
+              --config "$CONFIG" \
+              --json \
+              --output "$RAPPORTS/apres.json" \
+              "${MODULES[@]}"
+          )
+
+      # Comparer les rapports
+      - name: Comparer les detections Semgrep
+        shell: bash
+        run: |
+          python candidat/IFT3913-Tache3/script-comparaison.py \
+            --baseline ci-rapports/baseline.json \
+            --apres ci-rapports/apres.json \
+            --base-root reference \
+            --candidate-root candidat \
+            --delta-output ci-rapports/comparaison.json
+
+      # Conserver les rapports meme en cas d'echec
+      - name: Conserver les rapports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapports-semgrep-tache3
+          path: ci-rapports/*.json
+          if-no-files-found: warn
+          retention-days: 90
