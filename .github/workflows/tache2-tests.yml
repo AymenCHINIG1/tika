@@ -15,14 +15,22 @@
 # limitations under the License.
 #
 
-name: IFT3913 task 2 tests
+name: IFT3913 - Build, tests et securite
 
 on:
   push:
   pull_request:
 
 jobs:
+  security:
+    name: Controle Semgrep
+    uses: ./.github/workflows/workflow-tache3-semgrep.yml
+    with:
+      reference: ${{ github.event.pull_request.base.sha || (github.event.before != '0000000000000000000000000000000000000000' && github.event.before) || 'tache3' }}
+      candidat: ${{ github.event.pull_request.head.sha || github.sha }}
+
   regex-capture-parser:
+    needs: security
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -88,6 +96,7 @@ jobs:
           retention-days: 90
 
   pdf-parser:
+    needs: security
     runs-on: ubuntu-latest
     timeout-minutes: 20
 

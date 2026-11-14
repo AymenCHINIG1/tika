@@ -2,13 +2,16 @@
 name: IFT3913 - Tache 3 Semgrep
 
 on:
-  pull_request:
-    branches:
-      - tache3
-    types:
-      - opened
-      - synchronize
-      - reopened
+  workflow_call:
+    inputs:
+      reference:
+        description: Commit ou branche servant de reference
+        required: true
+        type: string
+      candidat:
+        description: Commit a analyser
+        required: true
+        type: string
 
 jobs:
   semgrep:
@@ -21,14 +24,14 @@ jobs:
       - name: Recuperer le code de reference
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.base.sha || 'tache3' }}
+          ref: ${{ inputs.reference }}
           path: reference
 
       # Recuperer le code propose
       - name: Recuperer le code candidat
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ inputs.candidat }}
           path: candidat
 
       # Preparer Python
