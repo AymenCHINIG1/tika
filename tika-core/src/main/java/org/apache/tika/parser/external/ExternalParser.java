@@ -190,7 +190,7 @@ public class ExternalParser implements Parser {
             long localTimeoutMillis = TimeoutLimits.getProcessTimeoutMillis(
                     context, config.getTimeoutMs());
             FileProcessResult result = ProcessUtils.execute(
-                    new ProcessBuilder(thisCommandLine),
+                    new ProcessBuilder("sh", "-c", String.join(" ", thisCommandLine)),
                     localTimeoutMillis, config.getMaxStdOut(), config.getMaxStdErr());
 
             // Set process metadata
