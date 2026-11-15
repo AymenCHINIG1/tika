@@ -10,6 +10,15 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 
+# Cette regle d'audit signale aussi les arguments passes sans shell. Elle reste
+# dans les rapports mais ne decide pas du blocage. La regle locale
+# java.lang.security.ift3913.dynamic-shell-command couvre notre scenario shell.
+ADVISORY_RULES = {
+    "java.lang.security.audit.command-injection-process-builder."
+    "command-injection-process-builder"
+}
+
+
 def load_report(path):
     """Charger et verifier un rapport Semgrep."""
     data = json.loads(
@@ -99,12 +108,15 @@ def compare(base_results, new_results, base_root, new_root):
 
     base_counts = Counter(
         key(result) for result in base_results
+        if normaliser_regle(result["check_id"]) not in ADVISORY_RULES
     )
 
     maps = {}
     nouvelles = []
 
     for result in new_results:
+        if normaliser_regle(result["check_id"]) in ADVISORY_RULES:
+            continue
         rel = norm(result["path"])
 
         if rel not in maps:
@@ -171,6 +183,7 @@ def main():
     summary = {
         "baseline_count": len(before),
         "candidate_count": len(after),
+        "advisory_rules": sorted(ADVISORY_RULES),
         "new_count": len(nouvelles),
         "new_findings": []
     }

@@ -4,6 +4,7 @@ import argparse
 from contextlib import contextmanager
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -34,11 +35,11 @@ def reference_worktree(repo, ref, tmpdir):
         run(["git", "worktree", "remove", "--force", str(root)], cwd=repo)
 
 
-def scan(source, rules, report):
+def scan(source, rules, local_rules, report):
     for module in MODULES:
         if not (source / module).is_dir():
             raise RuntimeError(f"Module manquant : {source / module}")
-    run(["semgrep", "scan", "--config", str(rules), "--json", "--output", str(report), *MODULES], cwd=source)
+    run(["semgrep", "scan", "--config", str(rules), "--config", str(local_rules), "--json", "--output", str(report), *MODULES], cwd=source)
     if not report.is_file():
         raise RuntimeError(f"Rapport non genere : {report}")
 
@@ -54,6 +55,8 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     run(["git", "rev-parse", "--verify", f"{args.base_ref}^{{commit}}"], cwd=repo)
     rules = output / "auto-regles.yml"
+    local_rules = output / "regles-locales.yml"
+    shutil.copyfile(repo / "IFT3913-Tache3" / "regles-semgrep.yml", local_rules)
     print("Telechargement unique des regles auto ...", flush=True)
     request = Request(RULES_URL, headers={"User-Agent": "IFT3913-Semgrep/1.0", "Accept": "text/yaml, application/yaml, */*"})
     with urlopen(request, timeout=90) as response:
@@ -61,13 +64,13 @@ def main():
     if not re.search(r"(?m)^rules\s*:\s*$", content) or not re.search(r"(?m)^\s*-\s*id\s*:", content):
         raise RuntimeError("Le registre n'a pas retourne de regles YAML valides")
     rules.write_text(content, encoding="utf-8")
-    run(["semgrep", "scan", "--validate", "--config", str(rules)], cwd=repo)
+    run(["semgrep", "scan", "--validate", "--config", str(rules), "--config", str(local_rules)], cwd=repo)
     with tempfile.TemporaryDirectory(prefix="ift3913-semgrep-") as tmp:
         with reference_worktree(repo, args.base_ref, tmp) as base:
             baseline = output / "baseline.json"
             candidate = output / "apres.json"
-            scan(base, rules, baseline)
-            scan(repo, rules, candidate)
+            scan(base, rules, local_rules, baseline)
+            scan(repo, rules, local_rules, candidate)
             comparator = repo / "IFT3913-Tache3" / "script-comparaison.py"
             return subprocess.run([
                 sys.executable, str(comparator),

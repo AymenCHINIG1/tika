@@ -1,0 +1,5 @@
+{
+  "source": "https://semgrep.dev/c/auto",
+  "sha256": "3faab57c5cad4312fadc9fe3dcca923a5dfb06b3808193c39dae758247617b70",
+  "note": "Copie brute retiree du depot : une exclusion pattern-not de la regle detected-slack-webhook contient une chaine reconnue par GitHub Push Protection. Les copies de travail dans rapports-semgrep restent locales ; les regles du CI sont conservees dans les artefacts GitHub Actions."
+}

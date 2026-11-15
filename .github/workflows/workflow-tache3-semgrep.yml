@@ -52,6 +52,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p ci-regles ci-rapports
+          cp candidat/IFT3913-Tache3/regles-semgrep.yml ci-regles/locales.yml
 
           curl --fail --show-error --silent --location \
             -H "Accept: application/json" \
@@ -59,7 +60,8 @@ jobs:
             -o ci-regles/auto.yml
 
           semgrep scan --validate \
-            --config ci-regles/auto.yml
+            --config ci-regles/auto.yml \
+            --config ci-regles/locales.yml
 
       # Scanner les deux versions avec les memes regles
       - name: Analyser les deux versions de Tika
@@ -74,6 +76,7 @@ jobs:
           )
 
           CONFIG="$GITHUB_WORKSPACE/ci-regles/auto.yml"
+          LOCAL_CONFIG="$GITHUB_WORKSPACE/ci-regles/locales.yml"
           RAPPORTS="$GITHUB_WORKSPACE/ci-rapports"
 
           echo "Analyse du code de reference"
@@ -82,6 +85,7 @@ jobs:
             cd reference
             semgrep scan \
               --config "$CONFIG" \
+              --config "$LOCAL_CONFIG" \
               --json \
               --output "$RAPPORTS/baseline.json" \
               "${MODULES[@]}"
@@ -93,6 +97,7 @@ jobs:
             cd candidat
             semgrep scan \
               --config "$CONFIG" \
+              --config "$LOCAL_CONFIG" \
               --json \
               --output "$RAPPORTS/apres.json" \
               "${MODULES[@]}"
@@ -115,6 +120,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rapports-semgrep-tache3
-          path: ci-rapports/*.json
+          path: |
+            ci-rapports/*.json
+            ci-regles/*.yml
           if-no-files-found: warn
           retention-days: 90
