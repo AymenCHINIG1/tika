@@ -60,3 +60,16 @@ validation distante est encore nécessaire.
 
 **Important : le test volontairement faux doit être retiré après la démonstration.**
 Les sept vulnérabilités de production sont conservées pour le devoir.
+
+## Execution GitHub de la demonstration rickroll
+
+- Execution : https://github.com/AymenCHINIG1/tika/actions/runs/43676079257
+- Commit : `7ef39892c7ed2687a207e835d1d09f1e413874d1`, push sur `aymen/tache3`.
+- Resume public : Semgrep reussi ; job core en echec (47 s) et job PDF en echec (1 min 21 s). Le workflow reste en echec.
+- L’etape rickroll est presente dans le job core ; Aymen rapporte avoir vu les phrases du script dans le resume. Les logs detailles de l’assertion et de l’action restent a archiver par capture.
+- Archive Semgrep affichee : 344 KB ; SHA-256 `089ecc5f7f674c449afe5200a6636cb13286e158584a3a5ab9e96f3eff1c533d`. Non telechargee.
+- Le test temporaire core doit etre retire apres collecte des preuves. Le job PDF echoue aussi : cause a examiner separement, sans attribuer cet echec au test temporaire core.
+
+## Textes valides avec Aymen
+
+Le script et l’aperçu local utilisent maintenant : « Le test a échoué. Rick n’a pas apprécié. » et « Rick sait chanter, mais pas encore corriger les tests : l’échec reste signalé. ». Les anciennes preuves distantes correspondent aux textes précédents. Seuls les messages changent ; les conditions et statuts restent identiques.
