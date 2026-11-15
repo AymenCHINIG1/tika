@@ -72,8 +72,8 @@
     {
       "rule": "java.lang.security.ift3913.unrestricted-polymorphic-deserialization",
       "file": "tika-serialization/src/main/java/org/apache/tika/config/loader/TikaObjectMapperFactory.java",
-      "line": 117,
-      "column": 9,
+      "line": 118,
+      "column": 13,
       "severity": "ERROR"
     }
   ]

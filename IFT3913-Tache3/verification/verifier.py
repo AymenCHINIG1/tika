@@ -38,6 +38,6 @@ with tempfile.TemporaryDirectory(prefix="task3-classes-") as classes:
         "java", "-cp", classpath, "VerifyVulnerabilities",
     ], capture_output=True, text=True)
     output = result.stdout + result.stderr
-    (root / "IFT3913-Tache3/preuves/sept-vulnerabilites/verification-comportements.txt").write_text(output)
+    (root / "IFT3913-Tache3/preuves/verification.txt").write_text(output)
     print(output, end="")
     result.check_returncode()

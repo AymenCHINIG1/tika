@@ -1,5 +1,0 @@
-CONFIRME: CWE-22: path escapes allowed directory
-CONFIRME: CWE-611: local XML entity resolved
-CONFIRME: CWE-732: temporary file has others-read permission
-CONFIRME: CWE-78: filename interpreted by shell (harmless printf)
-CONFIRME: CWE-502: input selects an application class outside a subtype allowlist

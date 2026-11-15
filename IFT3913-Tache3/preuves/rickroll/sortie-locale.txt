@@ -1,8 +1,0 @@
-     o/       \o       o
-    /|         |\     /|\
-    / \       / \     / \
-
-  Le test a échoué. Rick n’a pas apprécié.
-
-Suite : Validation locale Tika
-Votre recompense musicale : https://www.youtube.com/watch?v=dQw4w9WgXcQ

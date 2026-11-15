@@ -1,9 +1,0 @@
-{
-  "baseline_count": 18,
-  "candidate_count": 17,
-  "advisory_rules": [
-    "java.lang.security.audit.command-injection-process-builder.command-injection-process-builder"
-  ],
-  "new_count": 0,
-  "new_findings": []
-}

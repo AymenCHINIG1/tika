@@ -1,0 +1,26 @@
+{
+  "compilation_modules_modifies": "succes",
+  "tests_pdf": {
+    "tests": 130,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  },
+  "tests_core_cibles": {
+    "tests": 4,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tests_comparateur": {
+    "tests": 9,
+    "failures": 0,
+    "errors": 0
+  },
+  "verification_comportements": {
+    "cas": 5,
+    "resultat": "succes",
+    "sortie": "verification.txt"
+  },
+  "validation_ci_finale": "https://github.com/AymenCHINIG1/tika/actions/runs/43679221888"
+}

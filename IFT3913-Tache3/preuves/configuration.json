@@ -1,0 +1,14 @@
+{
+  "reference": "ff4ba23e3e41796e6ed64b75e552870f423d8b16",
+  "version_code_final": "40c998b823d2cb65cdc4d1d23aeb85b72f838457",
+  "semgrep": "1.184.0",
+  "java": "21",
+  "regles_registre": {
+    "source": "https://semgrep.dev/c/auto",
+    "sha256": "14fb8d0f2237e427120c0507cb537fccc97d53d8d8c51867016d1c2060cc3c69"
+  },
+  "regles_locales": {
+    "fichier": "../regles-semgrep.yml",
+    "sha256": "c97ea0bbf0dc7796b1e4a6dfc2789c79dc9f7ca0101e849458c0cc9848318dcb"
+  }
+}
