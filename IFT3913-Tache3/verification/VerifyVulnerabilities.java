@@ -69,7 +69,8 @@ public class VerifyVulnerabilities {
             require(stdout != null && stdout.endsWith("TASK3_SHELL_MARKER"),
                     "CWE-78: filename interpreted by shell (harmless printf)");
 
-            Object value = TikaObjectMapperFactory.createMapper().readValue(
+            Object value = TikaObjectMapperFactory.createMapper(
+                    new com.fasterxml.jackson.core.JsonFactory()).readValue(
                     "[\"VerifyVulnerabilities$Marker\",{}]", Object.class);
             require(value instanceof Marker && Marker.constructed,
                     "CWE-502: input selects an application class outside a subtype allowlist");

@@ -49,6 +49,22 @@ class GateTests(unittest.TestCase):
                          [finding(SHELL, 1)],
                          [finding(SHELL, 1), finding(SHELL, 2)], [SHELL])
 
+    def test_existing_alert_reindented_inside_condition(self):
+        old = finding(SHELL, 1)
+        old['start']['col'] = 5
+        new = finding(SHELL, 2)
+        new['start']['col'] = 9
+        self.check_delta("    shell\n", "if (enabled) {\n        shell\n}\n",
+                         [old], [new], [])
+
+    def test_changed_command_still_blocks_after_reindent(self):
+        old = finding(SHELL, 1)
+        old['start']['col'] = 5
+        new = finding(SHELL, 2)
+        new['start']['col'] = 9
+        self.check_delta("    shell(old)\n", "if (enabled) {\n        shell(new)\n}\n",
+                         [old], [new], [SHELL])
+
     def test_same_total_different_rules_still_blocks(self):
         self.check_delta("old\n", "shell\n", [finding(OTHER, 1)],
                          [finding(SHELL, 1)], [SHELL])

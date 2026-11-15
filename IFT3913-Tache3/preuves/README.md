@@ -142,3 +142,7 @@ Voir `rickroll/README.md` : action composite reutilisee dans les jobs core et PD
 - Semgrep reussi ; jobs core et PDF en echec. Archive Semgrep affichee : 344 KB ; SHA-256 `bc199f809b3b30ba76009aa5637902c90757436216c42d4145110d37bf0a0722`. Non telechargee.
 - La capture `rickroll/github-rickroll-messages-valides.png` confirme le resume du job core, le lien vers la surprise et les deux phrases validees. Le job reste rouge.
 - La methode temporaire `testRickrollValidation` a ensuite ete retiree localement ; l’action reste en place, comme les sept vulnerabilites. Aucun commit ni push de ce retrait n’a ete effectue par l’assistant. La cause de l’echec PDF reste a examiner.
+
+## Diagnostic et correction des trois erreurs PDF
+
+Les trois erreurs GitHub ont ete reproduites localement et attribuees au changement global de typage Jackson. La faiblesse est desormais limitee aux factories explicites, tandis que le JSON standard reste compatible. Suite PDF complete apres correction : 130 tests, 0 echec, 0 erreur, 1 ignore ; sept types toujours detectes (27 alertes) ; correction sans nouvelle detection (27 / 27 / 0). Voir `correction-pdf/README.md`. Aucun commit ni push effectue par l’assistant.

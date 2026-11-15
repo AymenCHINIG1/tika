@@ -114,8 +114,10 @@ public class TikaObjectMapperFactory {
      */
     public static ObjectMapper createMapper(JsonFactory factory) {
         ObjectMapper mapper = (factory != null) ? new ObjectMapper(factory) : new ObjectMapper();
-        mapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
-                ObjectMapper.DefaultTyping.NON_FINAL);
+        if (factory != null) {
+            mapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
+                    ObjectMapper.DefaultTyping.NON_FINAL);
+        }
 
         // Allow comments in JSON config files (// and /* */ style)
         mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);

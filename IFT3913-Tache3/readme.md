@@ -17,7 +17,7 @@ Choix d'une **baseline dynamique** permettant d'analyser la version de référen
 - Compilation locale verifiee ; rapports avant/apres et comparaison conserves.
 - Sept types confirmes dans le CI : 17 alertes avant, 27 apres, 10 nouvelles detections ; capture conservee.
 - Action reutilisable de rickroll ajoutee ; validation locale et procedure dans [les preuves rickroll](preuves/rickroll/README.md). La demonstration distante est confirmee par capture ; le test volontairement faux a ensuite ete retire localement.
-- Restent : validation distante apres retrait du test temporaire, diagnostic de l’echec PDF, validation via PR, finalisation et remise.
+- Restent : validation distante apres retrait du test temporaire, validation distante de la correction PDF, validation via PR, finalisation et remise.
 
 ### Ajustement du controle d'injection de commande
 
@@ -46,3 +46,9 @@ uniquement la copie avec injection. Un rejeu des rapports existants, enrichis du
 resultat de ce scan cible, donne 0 / 1 / 0 nouvelle detection pour les etats avant,
 injection et correction. Ce rejeu ne remplace pas une nouvelle execution complete
 dans GitHub Actions. Les preuves et limites sont dans `preuves/README.md`.
+
+### Compatibilite PDF apres les sept changements
+
+Les trois erreurs de configuration PDF ont ete reproduites et attribuees au typage polymorphe global. Celui-ci est maintenant limite aux mappers construits avec une factory explicite ; le chemin JSON standard conserve son format. La faiblesse pedagogique reste detectee et verifiee sur ce chemin explicite. Le comparateur tolere desormais la seule indentation initiale, avec neuf tests de regression reussis. Voir [les preuves de correction](preuves/correction-pdf/README.md).
+
+Verification PDF locale apres correction : 130 tests, zero echec, zero erreur, un ignore. Les sept types restent detectes ; la correction ne cree pas de nouvelle alerte.

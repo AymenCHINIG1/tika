@@ -79,16 +79,19 @@ contrôles de confinement, lexical et réel.
 **Fichier :** `tika-serialization/src/main/java/org/apache/tika/config/loader/TikaObjectMapperFactory.java`.
 
 **Choix :** la factory fournit le mapper partagé des chemins de configuration.
-L'activation du typage NON_FINAL avec `LaissezFaireSubTypeValidator` autorise les
-données à sélectionner des sous-types sans liste blanche.
+Le typage NON_FINAL avec `LaissezFaireSubTypeValidator` autorise les données à
+sélectionner des sous-types sans liste blanche. Après correction de la compatibilité
+PDF, il est activé seulement lorsqu'une factory explicite non nulle est fournie ;
+le mapper JSON standard reste compatible avec les configurations existantes.
 
 **Détection :** règle locale `unrestricted-polymorphic-deserialization`.
-**Vérification :** le vrai mapper instancie une classe marqueur du programme de
+**Vérification :** le vrai mapper, construit avec une factory explicite, instancie une classe marqueur du programme de
 validation, choisie par l'entrée JSON. Cela prouve le choix du type et l'exécution
 de son constructeur ; cela ne prouve pas une exécution de commande arbitraire.
 Un impact plus grave dépend des classes présentes et des points d'entrée
-acceptant des configurations non fiables. Le format polymorphe peut aussi casser
-des configurations existantes. **Correction :** supprimer le typage global ou
+acceptant des configurations non fiables. Le format polymorphe diffère du JSON habituel sur ce chemin explicite.
+Le problème initial de compatibilité des configurations standard est corrigé et
+documenté dans `../correction-pdf/README.md`. **Correction :** supprimer le typage global ou
 employer une liste explicite de types autorisés.
 
 ## V5 — Validation TLS désactivée, CWE-295

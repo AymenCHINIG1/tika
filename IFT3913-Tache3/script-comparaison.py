@@ -72,8 +72,10 @@ def stable_line_map(before, after):
     Associer les lignes inchangees du code candidat
     aux lignes correspondantes du code de reference.
     """
-    before_lines = before.splitlines(keepends=True)
-    after_lines = after.splitlines(keepends=True)
+    # Un changement d'indentation ne cree pas une nouvelle detection.
+    # Le contenu de la ligne (hors blancs initiaux) doit rester identique.
+    before_lines = [line.lstrip(" \t") for line in before.splitlines(keepends=True)]
+    after_lines = [line.lstrip(" \t") for line in after.splitlines(keepends=True)]
 
     mapping = {}
 
@@ -91,7 +93,7 @@ def stable_line_map(before, after):
     return mapping
 
 
-def key(result, line=None):
+def key(result, line=None, column=None):
     """Construire l'identite d'une detection."""
     start = result["start"]
 
@@ -99,15 +101,32 @@ def key(result, line=None):
         normaliser_regle(result["check_id"]),
         norm(result["path"]),
         int(start["line"] if line is None else line),
-        int(start["col"])
+        int(start["col"] if column is None else column)
     )
 
 
 def compare(base_results, new_results, base_root, new_root):
     """Identifier les nouvelles detections Semgrep."""
 
+    source_cache = {}
+
+    def relative_column(result, root):
+        path = root / norm(result["path"])
+        if path not in source_cache:
+            source_cache[path] = (
+                path.read_text(encoding="utf-8", errors="replace").splitlines()
+                if path.is_file() else []
+            )
+        lines = source_cache[path]
+        index = int(result["start"]["line"]) - 1
+        if 0 <= index < len(lines):
+            line = lines[index]
+            indent = len(line) - len(line.lstrip(" \t"))
+            return int(result["start"]["col"]) - indent
+        return int(result["start"]["col"])
+
     base_counts = Counter(
-        key(result) for result in base_results
+        key(result, column=relative_column(result, base_root)) for result in base_results
         if normaliser_regle(result["check_id"]) not in ADVISORY_RULES
     )
 
@@ -145,7 +164,7 @@ def compare(base_results, new_results, base_root, new_root):
         matched = False
 
         if mapped is not None:
-            candidate_key = key(result, mapped)
+            candidate_key = key(result, mapped, relative_column(result, new_root))
 
             if base_counts[candidate_key] > 0:
                 base_counts[candidate_key] -= 1
