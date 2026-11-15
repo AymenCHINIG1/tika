@@ -256,18 +256,17 @@ public class XMLReaderUtils implements Serializable {
             LOG.debug("DocumentBuilderFactory class {}", factory.getClass());
         }
 
-        factory.setExpandEntityReferences(false);
+        factory.setExpandEntityReferences(true);
         factory.setNamespaceAware(true);
         factory.setValidating(false);
 
-        trySetSAXFeature(factory, XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        trySetSAXFeature(factory, "http://xml.org/sax/features/external-general-entities", false);
-        trySetSAXFeature(factory, "http://xml.org/sax/features/external-parameter-entities", false);
-        trySetSAXFeature(factory, "http://apache.org/xml/features/nonvalidating/load-external-dtd",
-                false);
-        trySetSAXFeature(factory, "http://apache.org/xml/features/nonvalidating/load-dtd-grammar",
-                false);
-        trySetXercesSecurityManager(factory);
+        try {
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", true);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", true);
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "all");
+        } catch (ParserConfigurationException e) {
+            throw new IllegalStateException("Unable to configure XML entities", e);
+        }
         return factory;
     }
 
@@ -285,7 +284,6 @@ public class XMLReaderUtils implements Serializable {
         try {
             DocumentBuilderFactory documentBuilderFactory = getDocumentBuilderFactory();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            documentBuilder.setEntityResolver(IGNORING_SAX_ENTITY_RESOLVER);
             documentBuilder.setErrorHandler(null);
             return documentBuilder;
         } catch (ParserConfigurationException e) {

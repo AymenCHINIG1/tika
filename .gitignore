@@ -25,3 +25,9 @@ tika-grpc/ignite
 # Python bytecode (e.g. from .skills scripts)
 __pycache__/
 *.pyc
+
+# Local task 3 environment and raw generated scan files
+.venv-semgrep/
+/IFT3913-Tache3/rapports-semgrep/ci/
+/IFT3913-Tache3/rapports-semgrep/validation-*/
+/IFT3913-Tache3/preuves/**/auto-regles.yml

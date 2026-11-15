@@ -15,14 +15,22 @@
 # limitations under the License.
 #
 
-name: IFT3913 task 2 tests
+name: IFT3913 - Build, tests et securite
 
 on:
   push:
   pull_request:
 
 jobs:
+  security:
+    name: Controle Semgrep
+    uses: ./.github/workflows/workflow-tache3-semgrep.yml
+    with:
+      reference: ${{ github.event.pull_request.base.sha || (github.event.before != '0000000000000000000000000000000000000000' && github.event.before) || 'tache3' }}
+      candidat: ${{ github.event.pull_request.head.sha || github.sha }}
+
   regex-capture-parser:
+    needs: security
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -40,11 +48,13 @@ jobs:
           -DskipTests=true -DskipITs=true
           -Dossindex.skip=true --no-transfer-progress
       - name: Run task 2 tests
+        id: unit_tests
         run: >-
           ./mvnw -f tika-core/pom.xml
           -Dtest=RegexCaptureParserChatUniTestTest,RegexCaptureParserManualTest
           test -DskipITs=true -Dossindex.skip=true --no-transfer-progress
       - name: Run mutation analysis before ChatUniTest
+        id: mutation_before
         run: >-
           ./mvnw -f tika-core/pom.xml test-compile
           org.pitest:pitest-maven:mutationCoverage
@@ -59,6 +69,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
       - name: Run mutation analysis after ChatUniTest
+        id: mutation_after
         run: >-
           ./mvnw -f tika-core/pom.xml test-compile
           org.pitest:pitest-maven:mutationCoverage
@@ -73,6 +84,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
       - name: Run final mutation analysis
+        id: mutation_final
         run: >-
           ./mvnw -f tika-core/pom.xml test-compile
           org.pitest:pitest-maven:mutationCoverage
@@ -87,7 +99,14 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
+      - name: Rickroll apres un echec des tests core
+        if: ${{ failure() && (steps.unit_tests.outcome == 'failure' || steps.mutation_before.outcome == 'failure' || steps.mutation_after.outcome == 'failure' || steps.mutation_final.outcome == 'failure') }}
+        uses: ./.github/actions/rickroll
+        with:
+          contexte: Tests core et analyse de mutations
+
   pdf-parser:
+    needs: security
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -107,9 +126,16 @@ jobs:
           -DskipTests=true -DskipITs=true
           -Dossindex.skip=true --no-transfer-progress
       - name: Run PDF parser tests
+        id: pdf_tests
         run: >-
           ./mvnw -B
           -f tika-parsers/tika-parsers-standard/tika-parsers-standard-modules/tika-parser-pdf-module/pom.xml
           test
           -DskipITs=true -Dossindex.skip=true
           --no-transfer-progress
+
+      - name: Rickroll apres un echec des tests PDF
+        if: ${{ failure() && steps.pdf_tests.outcome == 'failure' }}
+        uses: ./.github/actions/rickroll
+        with:
+          contexte: Tests du parseur PDF

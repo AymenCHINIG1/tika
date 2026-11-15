@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,6 +114,10 @@ public class TikaObjectMapperFactory {
      */
     public static ObjectMapper createMapper(JsonFactory factory) {
         ObjectMapper mapper = (factory != null) ? new ObjectMapper(factory) : new ObjectMapper();
+        if (factory != null) {
+            mapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
+                    ObjectMapper.DefaultTyping.NON_FINAL);
+        }
 
         // Allow comments in JSON config files (// and /* */ style)
         mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);

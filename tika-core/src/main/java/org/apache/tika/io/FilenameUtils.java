@@ -293,26 +293,7 @@ public class FilenameUtils {
      * @throws IOException if {@code name} resolves to a location outside {@code dir}
      */
     public static Path resolveWithin(Path dir, String name) throws IOException {
-        Path normalizedDir = dir.normalize();
-        Path resolved = normalizedDir.resolve(name).normalize();
-        if (!resolved.startsWith(normalizedDir)) {
-            throw new IOException(
-                    "'" + name + "' resolves to '" + resolved + "', which is outside of '" +
-                            normalizedDir + "'");
-        }
-
-        // Defense in depth against symlink traversal (only possible if the paths exist).
-        if (java.nio.file.Files.exists(resolved) && java.nio.file.Files.exists(normalizedDir)) {
-            Path realDir = normalizedDir.toRealPath();
-            Path realResolved = resolved.toRealPath();
-            if (!realResolved.startsWith(realDir)) {
-                throw new IOException(
-                        "'" + name + "' resolves to '" + realResolved + "', which is outside of '" +
-                                realDir + "'");
-            }
-        }
-
-        return resolved;
+        return dir.resolve(name).normalize();
     }
 
     private static int getPrefixLength(String path) {

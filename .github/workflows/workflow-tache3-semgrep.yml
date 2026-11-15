@@ -2,13 +2,16 @@
 name: IFT3913 - Tache 3 Semgrep
 
 on:
-  pull_request:
-    branches:
-      - tache3
-    types:
-      - opened
-      - synchronize
-      - reopened
+  workflow_call:
+    inputs:
+      reference:
+        description: Commit ou branche servant de reference
+        required: true
+        type: string
+      candidat:
+        description: Commit a analyser
+        required: true
+        type: string
 
 jobs:
   semgrep:
@@ -21,14 +24,14 @@ jobs:
       - name: Recuperer le code de reference
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.base.sha || 'tache3' }}
+          ref: ${{ inputs.reference }}
           path: reference
 
       # Recuperer le code propose
       - name: Recuperer le code candidat
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ inputs.candidat }}
           path: candidat
 
       # Preparer Python
@@ -49,6 +52,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p ci-regles ci-rapports
+          cp candidat/IFT3913-Tache3/regles-semgrep.yml ci-regles/locales.yml
 
           curl --fail --show-error --silent --location \
             -H "Accept: application/json" \
@@ -56,7 +60,8 @@ jobs:
             -o ci-regles/auto.yml
 
           semgrep scan --validate \
-            --config ci-regles/auto.yml
+            --config ci-regles/auto.yml \
+            --config ci-regles/locales.yml
 
       # Scanner les deux versions avec les memes regles
       - name: Analyser les deux versions de Tika
@@ -71,6 +76,7 @@ jobs:
           )
 
           CONFIG="$GITHUB_WORKSPACE/ci-regles/auto.yml"
+          LOCAL_CONFIG="$GITHUB_WORKSPACE/ci-regles/locales.yml"
           RAPPORTS="$GITHUB_WORKSPACE/ci-rapports"
 
           echo "Analyse du code de reference"
@@ -79,6 +85,7 @@ jobs:
             cd reference
             semgrep scan \
               --config "$CONFIG" \
+              --config "$LOCAL_CONFIG" \
               --json \
               --output "$RAPPORTS/baseline.json" \
               "${MODULES[@]}"
@@ -90,6 +97,7 @@ jobs:
             cd candidat
             semgrep scan \
               --config "$CONFIG" \
+              --config "$LOCAL_CONFIG" \
               --json \
               --output "$RAPPORTS/apres.json" \
               "${MODULES[@]}"
@@ -112,6 +120,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: rapports-semgrep-tache3
-          path: ci-rapports/*.json
+          path: |
+            ci-rapports/*.json
+            ci-regles/*.yml
           if-no-files-found: warn
           retention-days: 90

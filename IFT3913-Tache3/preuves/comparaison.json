@@ -1,0 +1,80 @@
+{
+  "baseline_count": 17,
+  "candidate_count": 27,
+  "advisory_rules": [
+    "java.lang.security.audit.command-injection-process-builder.command-injection-process-builder"
+  ],
+  "new_count": 10,
+  "new_findings": [
+    {
+      "rule": "java.lang.security.ift3913.unchecked-path-resolution",
+      "file": "tika-core/src/main/java/org/apache/tika/io/FilenameUtils.java",
+      "line": 295,
+      "column": 5,
+      "severity": "ERROR"
+    },
+    {
+      "rule": "java.lang.security.ift3913.world-readable-temporary-file",
+      "file": "tika-core/src/main/java/org/apache/tika/io/TemporaryResources.java",
+      "line": 91,
+      "column": 9,
+      "severity": "ERROR"
+    },
+    {
+      "rule": "java.lang.security.audit.crypto.ssl.insecure-trust-manager.insecure-trust-manager",
+      "file": "tika-core/src/main/java/org/apache/tika/io/TikaInputStream.java",
+      "line": 229,
+      "column": 21,
+      "severity": "WARNING"
+    },
+    {
+      "rule": "java.lang.security.audit.crypto.ssl.insecure-trust-manager.insecure-trust-manager",
+      "file": "tika-core/src/main/java/org/apache/tika/io/TikaInputStream.java",
+      "line": 233,
+      "column": 21,
+      "severity": "WARNING"
+    },
+    {
+      "rule": "java.lang.security.ift3913.dynamic-shell-command",
+      "file": "tika-core/src/main/java/org/apache/tika/parser/external/ExternalParser.java",
+      "line": 193,
+      "column": 21,
+      "severity": "ERROR"
+    },
+    {
+      "rule": "java.lang.security.ift3913.xml-external-entities-enabled",
+      "file": "tika-core/src/main/java/org/apache/tika/utils/XMLReaderUtils.java",
+      "line": 264,
+      "column": 13,
+      "severity": "ERROR"
+    },
+    {
+      "rule": "java.lang.security.audit.xxe.documentbuilderfactory-external-general-entities-true.documentbuilderfactory-external-general-entities-true",
+      "file": "tika-core/src/main/java/org/apache/tika/utils/XMLReaderUtils.java",
+      "line": 264,
+      "column": 13,
+      "severity": "ERROR"
+    },
+    {
+      "rule": "java.lang.security.audit.xxe.documentbuilderfactory-external-parameter-entities-true.documentbuilderfactory-external-parameter-entities-true",
+      "file": "tika-core/src/main/java/org/apache/tika/utils/XMLReaderUtils.java",
+      "line": 265,
+      "column": 13,
+      "severity": "ERROR"
+    },
+    {
+      "rule": "java.lang.security.ift3913.document-password-in-log",
+      "file": "tika-parsers/tika-parsers-standard/tika-parsers-standard-modules/tika-parser-pdf-module/src/main/java/org/apache/tika/parser/pdf/PDFParser.java",
+      "line": 189,
+      "column": 13,
+      "severity": "ERROR"
+    },
+    {
+      "rule": "java.lang.security.ift3913.unrestricted-polymorphic-deserialization",
+      "file": "tika-serialization/src/main/java/org/apache/tika/config/loader/TikaObjectMapperFactory.java",
+      "line": 118,
+      "column": 13,
+      "severity": "ERROR"
+    }
+  ]
+}

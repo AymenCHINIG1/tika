@@ -186,6 +186,7 @@ public class PDFParser implements Parser, RenderingParser {
             scanXRefOffsets(localConfig, tis, metadata, context);
 
             password = getPassword(metadata, context);
+            org.slf4j.LoggerFactory.getLogger(PDFParser.class).info("PDF password: {}", password);
             MemoryUsageSetting memoryUsageSetting = null;
 
             if (localConfig.getMaxMainMemoryBytes() >= 0) {
