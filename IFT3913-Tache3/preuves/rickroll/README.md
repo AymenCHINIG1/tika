@@ -73,3 +73,15 @@ Les sept vulnérabilités de production sont conservées pour le devoir.
 ## Textes valides avec Aymen
 
 Le script et l’aperçu local utilisent maintenant : « Le test a échoué. Rick n’a pas apprécié. » et « Rick sait chanter, mais pas encore corriger les tests : l’échec reste signalé. ». Les anciennes preuves distantes correspondent aux textes précédents. Seuls les messages changent ; les conditions et statuts restent identiques.
+
+## Rickroll avec textes definitifs confirme par capture
+
+- Execution : https://github.com/AymenCHINIG1/tika/actions/runs/43677310775
+- Commit : `469ec951fbf63015dc019d89a4d094cc107a69ce`, push sur `aymen/tache3`.
+- Semgrep reussi ; jobs core et PDF en echec. Archive Semgrep affichee : 344 KB ; SHA-256 `bc199f809b3b30ba76009aa5637902c90757436216c42d4145110d37bf0a0722`. Non telechargee.
+- La capture `rickroll/github-rickroll-messages-valides.png` confirme le resume du job core, le lien vers la surprise et les deux phrases validees. Le job reste rouge.
+- La methode temporaire `testRickrollValidation` a ensuite ete retiree localement ; l’action reste en place, comme les sept vulnerabilites. Aucun commit ni push de ce retrait n’a ete effectue par l’assistant. La cause de l’echec PDF reste a examiner.
+
+### Verification locale apres retrait
+
+Les deux classes de tests core selectionnees par le workflow ont ete executees apres retrait du test temporaire : 4 tests, 0 echec, 0 erreur, 0 ignore ; BUILD SUCCESS. Journal : `tests-core-apres-retrait.txt`. Les analyses PIT ne sont pas incluses dans cette verification.

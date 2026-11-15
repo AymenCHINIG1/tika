@@ -134,3 +134,11 @@ Voir `rickroll/README.md` : action composite reutilisee dans les jobs core et PD
 - L’etape rickroll est presente dans le job core ; Aymen rapporte avoir vu les phrases du script dans le resume. Les logs detailles de l’assertion et de l’action restent a archiver par capture.
 - Archive Semgrep affichee : 344 KB ; SHA-256 `089ecc5f7f674c449afe5200a6636cb13286e158584a3a5ab9e96f3eff1c533d`. Non telechargee.
 - Le test temporaire core doit etre retire apres collecte des preuves. Le job PDF echoue aussi : cause a examiner separement, sans attribuer cet echec au test temporaire core.
+
+## Rickroll avec textes definitifs confirme par capture
+
+- Execution : https://github.com/AymenCHINIG1/tika/actions/runs/43677310775
+- Commit : `469ec951fbf63015dc019d89a4d094cc107a69ce`, push sur `aymen/tache3`.
+- Semgrep reussi ; jobs core et PDF en echec. Archive Semgrep affichee : 344 KB ; SHA-256 `bc199f809b3b30ba76009aa5637902c90757436216c42d4145110d37bf0a0722`. Non telechargee.
+- La capture `rickroll/github-rickroll-messages-valides.png` confirme le resume du job core, le lien vers la surprise et les deux phrases validees. Le job reste rouge.
+- La methode temporaire `testRickrollValidation` a ensuite ete retiree localement ; l’action reste en place, comme les sept vulnerabilites. Aucun commit ni push de ce retrait n’a ete effectue par l’assistant. La cause de l’echec PDF reste a examiner.

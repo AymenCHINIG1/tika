@@ -16,8 +16,8 @@ Choix d'une **baseline dynamique** permettant d'analyser la version de référen
 - Sept modifications vulnerables preparees ensemble et documentees dans [le dossier des sept vulnerabilites](preuves/sept-vulnerabilites/README.md).
 - Compilation locale verifiee ; rapports avant/apres et comparaison conserves.
 - Sept types confirmes dans le CI : 17 alertes avant, 27 apres, 10 nouvelles detections ; capture conservee.
-- Action reutilisable de rickroll ajoutee ; validation locale et procedure dans [les preuves rickroll](preuves/rickroll/README.md). Un test temporaire volontairement faux est present pour la demonstration distante et devra etre retire.
-- Restent : validation distante du rickroll puis retrait du test temporaire, validation via PR, finalisation et remise.
+- Action reutilisable de rickroll ajoutee ; validation locale et procedure dans [les preuves rickroll](preuves/rickroll/README.md). La demonstration distante est confirmee par capture ; le test volontairement faux a ensuite ete retire localement.
+- Restent : validation distante apres retrait du test temporaire, diagnostic de l’echec PDF, validation via PR, finalisation et remise.
 
 ### Ajustement du controle d'injection de commande
 
