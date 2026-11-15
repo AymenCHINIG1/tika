@@ -15,7 +15,9 @@ Choix d'une **baseline dynamique** permettant d'analyser la version de référen
 - Cycle vert / rouge / vert valide sur les push avec la regle shell ciblee ; liens et captures dans `preuves/README.md`.
 - Sept modifications vulnerables preparees ensemble et documentees dans [le dossier des sept vulnerabilites](preuves/sept-vulnerabilites/README.md).
 - Compilation locale verifiee ; rapports avant/apres et comparaison conserves.
-- Restent : validation GitHub des sept changements, validation via PR, tests des cas limites du comparateur, rickroll et remise finale.
+- Sept types confirmes dans le CI : 17 alertes avant, 27 apres, 10 nouvelles detections ; capture conservee.
+- Action reutilisable de rickroll ajoutee ; validation locale et procedure dans [les preuves rickroll](preuves/rickroll/README.md). Un test temporaire volontairement faux est present pour la demonstration distante et devra etre retire.
+- Restent : validation distante du rickroll puis retrait du test temporaire, validation via PR, finalisation et remise.
 
 ### Ajustement du controle d'injection de commande
 

@@ -28,6 +28,11 @@ import org.apache.tika.config.JsonConfig;
 public class RegexCaptureParserManualTest {
 
     @Test
+    public void testRickrollValidation() {
+        assertTrue(false, "Echec volontaire temporaire pour valider le rickroll du CI");
+    }
+
+    @Test
     public void testGetConfigReturnsExactConfigurationInstance() {
         RegexCaptureParserConfig config = new RegexCaptureParserConfig();
         RegexCaptureParser parser = new RegexCaptureParser(config);

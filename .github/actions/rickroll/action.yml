@@ -1,0 +1,16 @@
+name: Rickroll apres un echec de test
+description: Affiche une surprise musicale dans les logs et le resume du job
+inputs:
+  contexte:
+    description: Suite de tests concernee
+    required: false
+    default: Tests Tika
+runs:
+  using: composite
+  steps:
+    - name: Pause musicale
+      if: ${{ always() }}
+      shell: bash
+      env:
+        RICKROLL_CONTEXTE: ${{ inputs.contexte }}
+      run: bash "$GITHUB_ACTION_PATH/rickroll.sh"

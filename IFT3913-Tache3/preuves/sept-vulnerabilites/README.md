@@ -169,3 +169,15 @@ l'aide de l'IA ; cette utilisation doit être déclarée dans la remise finale.
 ## Resultat final mesure
 
 Reference : **17** alertes ; apres : **27** alertes ; **10** nouvelles detections pour les **7 types**. Aucune erreur Semgrep dans les deux scans. Les 6 regles locales apparaissent uniquement apres modification ; TLS est signale par la regle du registre. Les alertes supplementaires XXE et TLS ne sont pas des types additionnels.
+
+## Validation GitHub des sept modifications
+
+- Execution : https://github.com/AymenCHINIG1/tika/actions/runs/43675203088
+- Commit : `fc77859b6f12094e927e93d5acf6b5b312441a3c`, branche `aymen/tache3`, evenement push.
+- Resume public consulte : controle Semgrep en echec avec code 1 ; les deux jobs regex-capture-parser et pdf-parser sont ignores. Duree totale : 2 min 1 s.
+- Archive affichee : `rapports-semgrep-tache3`, 343 KB ; SHA-256 `2cfc094ea40f9d42dc8a1cf5a78dd756c0f825df05cb1f1c5795f54d1eca1b02`. Non telechargee.
+- Les logs detailles et le nombre exact de nouvelles detections dans le CI restent a confirmer par capture ou rapport fourni par Aymen. Le resultat local mesure est 17 / 27 / 10.
+
+### Confirmation par capture des resultats distants
+
+La capture `sept-vulnerabilites/github-sept-vulnerabilites-comparaison.png`, fournie par Aymen pour l’execution 43675203088, confirme : reference 17, candidat 27, nouvelles 10, echec avec code 1. Les dix alertes couvrent les sept types : traversal (1), permissions (1), TLS (2), injection shell (1), XXE (3), mot de passe dans les logs (1), deserialisation polymorphe (1). Les nombres et les types correspondent au resultat local. Cette capture leve l’incertitude precedente sur les logs distants de cette execution.
