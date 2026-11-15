@@ -22,5 +22,20 @@
     "resultat": "succes",
     "sortie": "verification.txt"
   },
-  "validation_ci_finale": "https://github.com/AymenCHINIG1/tika/actions/runs/43679221888"
+  "validation_ci_finale": "https://github.com/AymenCHINIG1/tika/actions/runs/43679221888",
+  "validation_ci_pr": {
+    "pr": "https://github.com/AymenCHINIG1/tika/pull/7",
+    "execution": "https://github.com/AymenCHINIG1/tika/actions/runs/43758282959",
+    "base": "tache3",
+    "branche": "aymen/tache3",
+    "commit": "fc99a2b08557444cc01dfe1d5165b794dc2c831f",
+    "semgrep": "echec, code 1",
+    "core": "ignore",
+    "pdf": "ignore",
+    "reference_count": 17,
+    "candidate_count": 27,
+    "new_count": 10,
+    "types": 7,
+    "capture": "semgrep.png"
+  }
 }

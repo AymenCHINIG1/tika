@@ -48,7 +48,7 @@ On obtient **17 alertes avant les modifications**, puis **27 après**, soit **10
 - [Rapport après les modifications](preuves/apres.json).
 - [Comparaison des deux rapports, avec les règles et les lignes signalées](preuves/comparaison.json).
 
-Sur [l’exécution avec les sept vulnérabilités](https://github.com/AymenCHINIG1/tika/actions/runs/43675203088), Semgrep passe au rouge et les deux builds sont ignorés. On retrouve les dix nouvelles détections sur [la capture](preuves/semgrep.png).
+Sur [l’exécution avec les sept vulnérabilités](https://github.com/AymenCHINIG1/tika/actions/runs/43675203088), Semgrep passe au rouge et les deux builds sont ignorés.
 
 Les modules modifiés compilent et les [vérifications locales](preuves/verification.txt) réussissent. Pour TLS et les logs, on a vérifié le code et la détection, sans simuler une interception HTTPS ni un scénario complet de fuite de mot de passe.
 
@@ -65,6 +65,8 @@ Pour la partie humour, on a ajouté une [action réutilisable](../.github/action
 On a ajouté temporairement une assertion fausse dans un test pour vérifier que ça se déclenche bien. Sur [cette exécution](https://github.com/AymenCHINIG1/tika/actions/runs/43677310775), le message et le lien apparaissent, et le job reste rouge ([capture](preuves/rickroll.png)). On a ensuite retiré le test volontairement faux. Si c’est Semgrep ou le build préalable qui échoue, le rickroll ne se lance pas.
 
 Sur [la dernière exécution](https://github.com/AymenCHINIG1/tika/actions/runs/43679221888), tout est vert : Semgrep, les tests core, les mutations et les tests PDF. Les sept vulnérabilités sont toujours là, mais ce dernier push n’en ajoute pas par rapport au précédent.
+
+Sur la [PR vers `tache3`](https://github.com/AymenCHINIG1/tika/pull/7), le [contrôle Semgrep échoue](https://github.com/AymenCHINIG1/tika/actions/runs/43758282959) avec les dix nouvelles détections attendues et les deux builds sont ignorés ([capture](preuves/semgrep.png)).
 
 ## Utilisation de l’IA
 
