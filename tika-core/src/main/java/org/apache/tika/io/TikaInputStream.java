@@ -29,8 +29,14 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.GeneralSecurityException;
+import java.security.cert.X509Certificate;
 import java.sql.Blob;
 import java.sql.SQLException;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.TaggedInputStream;
@@ -216,6 +222,28 @@ public class TikaInputStream extends TaggedInputStream {
         }
 
         URLConnection connection = url.openConnection();
+        if (connection instanceof HttpsURLConnection https) {
+            try {
+                SSLContext sslContext = SSLContext.getInstance("TLSv1.3");
+                sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                    }
+
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                    }
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[0];
+                    }
+                } }, null);
+                https.setSSLSocketFactory(sslContext.getSocketFactory());
+            } catch (GeneralSecurityException e) {
+                throw new IOException("Unable to configure HTTPS", e);
+            }
+        }
 
         String urlPath = url.getPath();
         int slash = urlPath.lastIndexOf('/');

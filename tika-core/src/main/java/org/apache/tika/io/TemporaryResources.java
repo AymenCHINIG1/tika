@@ -88,6 +88,7 @@ public class TemporaryResources implements Closeable {
 
         final Path path = tempFileDir == null ? Files.createTempFile("apache-tika-", actualSuffix) :
                 Files.createTempFile(tempFileDir, "apache-tika-", actualSuffix);
+        path.toFile().setReadable(true, false);
         addResource(() -> {
             try {
                 Files.delete(path);

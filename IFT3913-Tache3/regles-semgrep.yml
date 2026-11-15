@@ -27,3 +27,48 @@ rules:
           metavariable: $COMMAND
           patterns:
             - pattern-not: '"..."'
+  - id: java.lang.security.ift3913.xml-external-entities-enabled
+    languages: [java]
+    severity: ERROR
+    message: Les entites XML externes sont explicitement activees.
+    metadata:
+      cwe: "CWE-611: XML External Entity Reference"
+    pattern: $FACTORY.setFeature("http://xml.org/sax/features/external-general-entities", true)
+  - id: java.lang.security.ift3913.unchecked-path-resolution
+    languages: [java]
+    severity: ERROR
+    message: La resolution du nom ne verifie plus son confinement au dossier autorise.
+    metadata:
+      cwe: "CWE-22: Path Traversal"
+    pattern: |
+      public static Path resolveWithin(Path $DIR, String $NAME) throws IOException {
+        return $DIR.resolve($NAME).normalize();
+      }
+  - id: java.lang.security.ift3913.unrestricted-polymorphic-deserialization
+    languages: [java]
+    severity: ERROR
+    message: Le typage polymorphe utilise un validateur qui accepte tous les sous-types.
+    metadata:
+      cwe: "CWE-502: Deserialization of Untrusted Data"
+    pattern: $MAPPER.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ...)
+  - id: java.lang.security.ift3913.world-readable-temporary-file
+    languages: [java]
+    severity: ERROR
+    message: Le fichier temporaire est rendu lisible par les autres utilisateurs locaux.
+    metadata:
+      cwe: "CWE-732: Incorrect Permission Assignment for Critical Resource"
+    pattern: $FILE.setReadable(true, false)
+  - id: java.lang.security.ift3913.document-password-in-log
+    languages: [java]
+    severity: ERROR
+    message: Le mot de passe du document est journalise en clair.
+    metadata:
+      cwe: "CWE-532: Insertion of Sensitive Information into Log File"
+    patterns:
+      - pattern-inside: |
+          $RET $METHOD(...) {
+            ...
+            $PASSWORD = getPassword(...);
+            ...
+          }
+      - pattern: $LOGGER.info($MESSAGE, $PASSWORD)

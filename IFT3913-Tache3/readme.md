@@ -11,11 +11,11 @@ Choix d'une **baseline dynamique** permettant d'analyser la version de référen
 - 17 détections dans la version modifiée.
 - 0 nouvelle détection après correction du problème de normalisation des identifiants.
 
-### Tests restants
-- Introduction volontaire de vulnérabilités pour vérifier leur détection.
-- Tests des déplacements de lignes et de la gestion des erreurs techniques.
-- Validation du workflow sur GitHub Actions.
-- Rickroll
+### Etat du travail
+- Cycle vert / rouge / vert valide sur les push avec la regle shell ciblee ; liens et captures dans `preuves/README.md`.
+- Sept modifications vulnerables preparees ensemble et documentees dans [le dossier des sept vulnerabilites](preuves/sept-vulnerabilites/README.md).
+- Compilation locale verifiee ; rapports avant/apres et comparaison conserves.
+- Restent : validation GitHub des sept changements, validation via PR, tests des cas limites du comparateur, rickroll et remise finale.
 
 ### Ajustement du controle d'injection de commande
 
