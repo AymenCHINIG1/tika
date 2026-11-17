@@ -47,17 +47,19 @@ jobs:
       - name: Verifier Semgrep
         run: semgrep --version
 
-      # Telecharger les regles une seule fois
+      # Decompresser le snapshot exact conserve avec les preuves
       - name: Recuperer les regles automatiques
         shell: bash
         run: |
           mkdir -p ci-regles ci-rapports
           cp candidat/IFT3913-Tache3/regles-semgrep.yml ci-regles/locales.yml
 
-          curl --fail --show-error --silent --location \
-            -H "Accept: application/json" \
-            https://semgrep.dev/c/auto \
-            -o ci-regles/auto.yml
+          gzip --decompress --stdout \
+            candidat/IFT3913-Tache3/preuves/regles-auto/semgrep-auto-99fecfb3.yml.gz \
+            > ci-regles/auto.yml
+
+          echo "99fecfb388687fe4b079edae4657891bc1fed672a0cc33e095d848f2d300a02e  ci-regles/auto.yml" \
+            | sha256sum --check --strict
 
           semgrep scan --validate \
             --config ci-regles/auto.yml \

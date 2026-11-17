@@ -10,13 +10,14 @@ spec = importlib.util.spec_from_file_location(
 comparison = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(comparison)
 
-SHELL = "java.lang.security.ift3913.dynamic-shell-command"
-AUDIT = next(iter(comparison.ADVISORY_RULES))
+SHELL = comparison.TARGETED_SHELL_RULE
+AUDIT = comparison.PROCESS_BUILDER_AUDIT_RULE
 OTHER = "java.lang.security.other"
+EXTERNAL = comparison.KNOWN_SAFE_PROCESS_BUILDER[0]
 
 
-def finding(rule, line):
-    return {"check_id": rule, "path": "Example.java",
+def finding(rule, line, path="Example.java"):
+    return {"check_id": rule, "path": path,
             "start": {"line": line, "col": 1}}
 
 
@@ -26,8 +27,11 @@ class GateTests(unittest.TestCase):
             base, candidate = Path(tmp) / "base", Path(tmp) / "candidate"
             base.mkdir()
             candidate.mkdir()
-            (base / "Example.java").write_text(before)
-            (candidate / "Example.java").write_text(after)
+            path = Path((new or old)[0]["path"])
+            (base / path).parent.mkdir(parents=True, exist_ok=True)
+            (candidate / path).parent.mkdir(parents=True, exist_ok=True)
+            (base / path).write_text(before)
+            (candidate / path).write_text(after)
             result = comparison.compare(old, new, base, candidate)
             self.assertEqual([r["check_id"] for r in result], expected)
 
@@ -36,9 +40,20 @@ class GateTests(unittest.TestCase):
                          [finding(AUDIT, 1), finding(SHELL, 1)], [SHELL])
 
     def test_shell_removed_does_not_block(self):
-        self.check_delta("shell\n", "direct\n",
-                         [finding(AUDIT, 1), finding(SHELL, 1)],
-                         [finding(AUDIT, 1)], [])
+        old = [finding(AUDIT, 1, EXTERNAL), finding(SHELL, 1, EXTERNAL)]
+        new = [finding(AUDIT, 1, EXTERNAL)]
+        self.check_delta('new ProcessBuilder("sh", "-c", command),\n',
+                         "new ProcessBuilder(thisCommandLine),\n",
+                         old, new, [])
+
+    def test_audit_rule_elsewhere_is_blocking(self):
+        self.check_delta("safe\n", "changed\n", [], [finding(AUDIT, 1)],
+                         [AUDIT])
+
+    def test_audit_rule_non_safe_call_in_same_file_is_blocking(self):
+        finding_audit = finding(AUDIT, 1, EXTERNAL)
+        self.check_delta("safe\n", "new ProcessBuilder(userInput),\n", [],
+                         [finding_audit], [AUDIT])
 
     def test_existing_shell_shifted_by_comment(self):
         self.check_delta("shell\n", "// comment\nshell\n",

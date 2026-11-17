@@ -13,9 +13,14 @@
     "skipped": 0
   },
   "tests_comparateur": {
-    "tests": 9,
+    "tests": 11,
     "failures": 0,
     "errors": 0
+  },
+  "snapshot_regles": {
+    "fichier": "regles-auto/semgrep-auto-99fecfb3.yml.gz",
+    "sha256_decompresse_verifie": true,
+    "validation_semgrep_1_184_0": "succes"
   },
   "verification_comportements": {
     "cas": 5,

@@ -1,14 +1,22 @@
 {
-  "reference": "ff4ba23e3e41796e6ed64b75e552870f423d8b16",
-  "version_code_final": "40c998b823d2cb65cdc4d1d23aeb85b72f838457",
+  "reference": "07d8d790ded9325de482447069cde204b36d2360",
+  "version_code_final": "fc99a2b08557444cc01dfe1d5165b794dc2c831f",
+  "execution": "https://github.com/AymenCHINIG1/tika/actions/runs/43758282959",
   "semgrep": "1.184.0",
   "java": "21",
   "regles_registre": {
     "source": "https://semgrep.dev/c/auto",
-    "sha256": "14fb8d0f2237e427120c0507cb537fccc97d53d8d8c51867016d1c2060cc3c69"
+    "snapshot_gzip": "regles-auto/semgrep-auto-99fecfb3.yml.gz",
+    "sha256_decompresse": "99fecfb388687fe4b079edae4657891bc1fed672a0cc33e095d848f2d300a02e",
+    "sha256_gzip": "d96eb0e20c9ddde831fdb19ff2bdae4d6e9829f584dc15dbbc9d5dcc3faf2bcc"
   },
   "regles_locales": {
     "fichier": "../regles-semgrep.yml",
     "sha256": "c97ea0bbf0dc7796b1e4a6dfc2789c79dc9f7ca0101e849458c0cc9848318dcb"
+  },
+  "rapports": {
+    "avant_sha256": "33b6d4625ca65e399c2c586ac93643198e7856157df215a28615f96afc5c1ed5",
+    "apres_sha256": "c7cb732dab3eb6b400566f0f047ca7e07dee8a6bf6a9ca725c7d81f8296f1f43",
+    "comparaison_sha256": "4fcb13ff3d8221b343c4d34426d6cf9a023982f9d3fb479a488aa96d0aef9ae8"
   }
 }

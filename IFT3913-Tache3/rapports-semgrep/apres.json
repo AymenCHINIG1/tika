@@ -1,0 +1,1 @@
+{"version":"1.184.0","results":[],"errors":[{"code":7,"level":"error","type":"SemgrepError","message":"No config given. Run with `--config auto` or see https://semgrep.dev/docs/running-rules/ for instructions on running with a specific config"}],"paths":{"scanned":[]},"engine_requested":"OSS","skipped_rules":[],"profiling_results":[]}

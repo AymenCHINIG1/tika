@@ -10,13 +10,15 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 
-# Cette regle d'audit signale aussi les arguments passes sans shell. Elle reste
-# dans les rapports mais ne decide pas du blocage. La regle locale
-# java.lang.security.ift3913.dynamic-shell-command couvre notre scenario shell.
-ADVISORY_RULES = {
+PROCESS_BUILDER_AUDIT_RULE = (
     "java.lang.security.audit.command-injection-process-builder."
     "command-injection-process-builder"
-}
+)
+TARGETED_SHELL_RULE = "java.lang.security.ift3913.dynamic-shell-command"
+KNOWN_SAFE_PROCESS_BUILDER = (
+    "tika-core/src/main/java/org/apache/tika/parser/external/ExternalParser.java",
+    "new ProcessBuilder(thisCommandLine),"
+)
 
 
 def load_report(path):
@@ -105,6 +107,40 @@ def key(result, line=None, column=None):
     )
 
 
+def source_line(result, root):
+    """Lire la ligne source visee par une detection."""
+    path = Path(root) / norm(result["path"])
+    if not path.is_file():
+        return ""
+    lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    index = int(result["start"]["line"]) - 1
+    return lines[index].strip() if 0 <= index < len(lines) else ""
+
+
+def is_nonblocking_duplicate(result, results, root):
+    """Limiter l'exception a un faux positif connu ou a une detection dupliquee.
+
+    La regle d'audit ProcessBuilder reste bloquante partout ailleurs. Elle est
+    seulement ignoree pour l'appel direct connu comme sur, ou lorsqu'une regle
+    locale bloquante signale deja la meme ligne shell.
+    """
+    if normaliser_regle(result["check_id"]) != PROCESS_BUILDER_AUDIT_RULE:
+        return False
+
+    rel = norm(result["path"])
+    safe_path, safe_source = KNOWN_SAFE_PROCESS_BUILDER
+    if rel == safe_path and source_line(result, root) == safe_source:
+        return True
+
+    line = int(result["start"]["line"])
+    return any(
+        normaliser_regle(other["check_id"]) == TARGETED_SHELL_RULE
+        and norm(other["path"]) == rel
+        and int(other["start"]["line"]) == line
+        for other in results
+    )
+
+
 def compare(base_results, new_results, base_root, new_root):
     """Identifier les nouvelles detections Semgrep."""
 
@@ -127,14 +163,14 @@ def compare(base_results, new_results, base_root, new_root):
 
     base_counts = Counter(
         key(result, column=relative_column(result, base_root)) for result in base_results
-        if normaliser_regle(result["check_id"]) not in ADVISORY_RULES
+        if not is_nonblocking_duplicate(result, base_results, base_root)
     )
 
     maps = {}
     nouvelles = []
 
     for result in new_results:
-        if normaliser_regle(result["check_id"]) in ADVISORY_RULES:
+        if is_nonblocking_duplicate(result, new_results, new_root):
             continue
         rel = norm(result["path"])
 
@@ -202,7 +238,12 @@ def main():
     summary = {
         "baseline_count": len(before),
         "candidate_count": len(after),
-        "advisory_rules": sorted(ADVISORY_RULES),
+        "limited_nonblocking_exception": {
+            "rule": PROCESS_BUILDER_AUDIT_RULE,
+            "known_safe_file": KNOWN_SAFE_PROCESS_BUILDER[0],
+            "known_safe_source": KNOWN_SAFE_PROCESS_BUILDER[1],
+            "duplicate_of": TARGETED_SHELL_RULE
+        },
         "new_count": len(nouvelles),
         "new_findings": []
     }
